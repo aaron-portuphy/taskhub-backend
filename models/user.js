@@ -8,7 +8,11 @@ const userSchema = new Schema({
     phone: {type: String, required: true},
     password: {type: String, required: true},
     zipcode: {type: Number, required: true}
-})
+},
+{
+    timestamps: true,
+}
+)
 
 userSchema.plugin(toJSON)
 export const UserModel = model('User', userSchema )

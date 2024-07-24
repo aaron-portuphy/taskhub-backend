@@ -6,6 +6,8 @@ const app = express();
 await mongoose.connect(process.env.MONGO_URL);
 console.log('Database is connected');
 
+app.use(express.json()); 
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, ()=>{
