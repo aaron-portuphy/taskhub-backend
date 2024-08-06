@@ -1,15 +1,28 @@
 import express from 'express';
 import mongoose from "mongoose";
 import "dotenv/config";
+import bodyParser from 'body-parser';
+import { taskerRouter } from './routes/tasks.route.js';
+import { userRouter } from './routes/user.route.js'
 
 const app = express();
+
+//Middleware
+app.use(express.json()); 
+app.use(bodyParser.json());
+
+//Routes
+app.use('/api/tasker', taskerRouter);
+app.use('/api/user', userRouter);
+
+//Mongo Connection
 await mongoose.connect(process.env.MONGO_URL);
 console.log('Database is connected');
 
-app.use(express.json()); 
+const port = process.env.PORT || 3030;
 
-const port = process.env.PORT || 3000;
 
+//Server Listening
 app.listen(port, ()=>{
     console.log(`App is listening on port ${port}`)
 });
