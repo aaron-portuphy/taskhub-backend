@@ -2,14 +2,13 @@ import express from 'express';
 import mongoose from "mongoose";
 import "dotenv/config";
 import bodyParser from 'body-parser';
-import { taskerRouter } from './routes/tasks.route.js';
+import { taskerRouter } from './routes/tasker.route.js';
 import { userRouter } from './routes/user.route.js'
 
 const app = express();
 
 //Middleware
 app.use(express.json()); 
-app.use(bodyParser.json());
 
 //Routes
 app.use('/api/tasker', taskerRouter);

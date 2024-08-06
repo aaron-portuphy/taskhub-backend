@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt';
-import { Tasker } from '../models/tasks.js';
+import { Tasker } from '../models/tasker.models.js';
 
 
 
 // Tasker Sign-Up
 export const signUpTasker = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, area, category, termsAccepted } = req.body;
+    const { firstName, lastName, email, password, selectACategory, termsAccepted } = req.body;
 
     // Check if the email is already taken
     const existingTasker = await Tasker.findOne({ email });
@@ -23,14 +23,15 @@ export const signUpTasker = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
-      area,
-      category,
+      selectACategory,
       termsAccepted
     });
 
     await newTasker.save();
     res.status(201).json({ message: 'Tasker registered successfully' });
   } catch (error) {
+    console.error('ERror during user sign-up:', error.message);
+      console.error(error.stack);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

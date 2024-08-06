@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import { User } from '../models/user.js'
+import { User } from '../models/user.models.js'
 
 
 // User Sign-Up
@@ -29,6 +29,8 @@ export const signUpUser = async (req, res) => {
       await newUser.save();
       res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
+      console.error('ERror during user sign-up:', error.message);
+      console.error(error.stack);
       res.status(500).json({ error: 'Internal server error' });
     }
   };

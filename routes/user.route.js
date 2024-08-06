@@ -5,4 +5,4 @@ export const userRouter = Router();
 
 
 // User Sign-Up Route
-userRouter.post('/user/signup', signUpUser);
+userRouter.post('/signup', signUpUser);

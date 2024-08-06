@@ -6,7 +6,7 @@ const taskSchema = new Schema({
     lastName:{type: String, required: true},
     email:{type: String, required: true, unique: true},
     password: {type: String, required: true, minlength: 6},
-    selectACategory: {type: String, required: true},
+    selectACategory: {type: String, required: true, enum:['Electrician', 'Plumber', 'Cleaner', 'Painter', 'Carpenter', 'Driver']},
     termsAccepted: {type: Boolean, required: true},
     createdAt: {type: Date, default: Date.now}
 },
