@@ -10,6 +10,10 @@ const app = express();
 //Middleware
 app.use(express.json()); 
 
+app.get('/api/health', (req, res)=>{
+    res.json({status: "UP"});
+})
+
 //Routes
 app.use('/api/tasker', taskerRouter);
 app.use('/api/user', userRouter);
