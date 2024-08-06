@@ -10,6 +10,13 @@ const app = express();
 //Middleware
 app.use(express.json()); 
 
+
+// Root route handler
+app.get('/', (req, res) => {
+    res.send('Welcome to TaskHub!');
+});
+
+// Health check endpoint
 app.get('/api/health', (req, res)=>{
     res.json({status: "UP"});
 })
