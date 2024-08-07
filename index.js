@@ -1,20 +1,26 @@
 import express from 'express';
 import mongoose from "mongoose";
+import expressOasGenerator from "@mickeymond/express-oas-generator";
+import cors from "cors";
 import "dotenv/config";
-import bodyParser from 'body-parser';
 import { taskerRouter } from './routes/tasker.route.js';
 import { userRouter } from './routes/user.route.js'
 
 const app = express();
 
+app.use(cors({credentials: true, origin: '*'}));
+
+expressOasGenerator.handleResponses(app, {
+    alwaysServeDocs: true,
+    tags: ['auth','Profile', 'Skill', 'Projects', 'Volunteering', 'Experience', 'Education', 'Achievement'],
+    mongooseModels: mongoose.modelNames(), 
+})
+
 //Middleware
 app.use(express.json()); 
 
 
-// Root route handler
-app.get('/', (req, res) => {
-    res.send('Welcome to TaskHub!');
-});
+
 
 // Health check endpoint
 app.get('/api/health', (req, res)=>{
@@ -24,6 +30,9 @@ app.get('/api/health', (req, res)=>{
 //Routes
 app.use('/api/tasker', taskerRouter);
 app.use('/api/user', userRouter);
+
+expressOasGenerator.handleRequests();
+app.use((req, res) => res.redirect('/api-docs/'));
 
 //Mongo Connection
 await mongoose.connect(process.env.MONGO_URL);
