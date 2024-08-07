@@ -12,7 +12,7 @@ app.use(cors({credentials: true, origin: '*'}));
 
 expressOasGenerator.handleResponses(app, {
     alwaysServeDocs: true,
-    tags: ['auth','Profile', 'Skill', 'Projects', 'Volunteering', 'Experience', 'Education', 'Achievement'],
+    tags: ['User','Tasker'],
     mongooseModels: mongoose.modelNames(), 
 })
 
