@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { User } from '../models/user.models.js'
+import { userSchema } from '../schema/user.schema.js';
 
 
 // User Sign-Up
@@ -31,6 +32,30 @@ export const signUpUser = async (req, res) => {
     } catch (error) {
       console.error('ERror during user sign-up:', error.message);
       console.error(error.stack);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+
+
+  export const loginUser = async (req, res) => {
+    try { 
+      const { email, password } = req.body;
+  
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+  
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+  
+      const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1h' });
+  
+      res.json({ message: 'Login successful', token });
+    } catch (error) {
+      console.error('Error during user login:', error.message);
       res.status(500).json({ error: 'Internal server error' });
     }
   };

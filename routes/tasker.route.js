@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { signUpTasker } from "../controllers/tasker.controllers.js"
+import { loginTasker, signUpTasker } from "../controllers/tasker.controllers.js"
 
 export const taskerRouter = Router();
 
 
 // Tasker Sign-Up Route
 taskerRouter.post('/signup', signUpTasker);
+taskerRouter.post('/login', loginTasker);
 
