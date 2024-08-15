@@ -1,10 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import expressOasGenerator from '@mickeymond/express-oas-generator';
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
 import cors from 'cors';
 import 'dotenv/config';
 import { taskerRouter } from './routes/tasker.route.js';
 import { userRouter } from './routes/user.route.js';
+import { bookingsRoutes } from './routes/bookings.route.js';
 
 const app = express();
 
@@ -27,9 +30,21 @@ app.get('/api/health', (req, res) => {
 // Routes
 app.use('/api/tasker', taskerRouter);
 app.use('/api/user', userRouter);
+app.use('/api', bookingsRoutes)
 
 expressOasGenerator.handleRequests();
 app.use((req, res) => res.redirect('/api-docs/'));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    // Store session
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL,
+    }),
+  })
+);
 
 // Mongo Connection
 await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });

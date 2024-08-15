@@ -23,7 +23,10 @@ export const signUpUser = async (req, res) => {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
-    const newUser = new User({ firstName, lastName, email, phoneNumber, password });
+    // Hash the password before saving the user
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ firstName, lastName, email, phoneNumber, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ message: 'User signed up successfully' });
@@ -48,7 +51,12 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1h' });
+    // Sign the JWT with the user's id and email
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_PRIVATE_KEY,
+      { expiresIn: '1h' }
+    );
 
     res.json({ message: 'Login successful', token });
   } catch (error) {
