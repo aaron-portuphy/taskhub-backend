@@ -41,23 +41,32 @@ export const signUpTasker = async (req, res) => {
 
 export const loginTasker = async (req, res) => {
   try {
+    console.log('Tasker login attempt:', req.body.email);
     const { email, password } = req.body;
 
     const tasker = await Tasker.findOne({ email });
     if (!tasker) {
+      console.error('Tasker not found:', email);
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const validPassword = await bcrypt.compare(password, tasker.password);
     if (!validPassword) {
+      console.error('Invalid password for tasker:', email);
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({ id: tasker._id, email: tasker.email }, process.env.JWT_PRIVATE_KEY, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { id: tasker._id, email: tasker.email },
+      process.env.JWT_PRIVATE_KEY,
+      { expiresIn: '1h' }
+    );
 
+    console.log('Tasker login successful:', email);
     res.json({ message: 'Login successful', token });
   } catch (error) {
-    console.error('Error during user login:', error); // Log the full error object
+    console.error('Error during tasker login:', error.message);
+    console.error(error.stack);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
